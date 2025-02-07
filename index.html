@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Club Waitlist</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="background" id="background"></div>
+    <!-- Background Image -->
+    <div class="overlay"></div>
+    <!-- Dark Gradient Overlay -->
+
+    <div class="container">
+      <!-- Logo Section -->
+      <div class="logo-container">
+        <img src="logo1.png" alt="Bookclub Finder Logo" class="logo" />
+      </div>
+
+      <h1>Good things come to those <em id="bookSaying">who wait.</em></h1>
+      <p>
+        Discover and join thriving book clubs, start your own, and grow your
+        reading list. Manage reservations, waitlists, book announcements, and
+        more! Be among the first to experience it!
+      </p>
+
+      <!-- Signup Form -->
+      <form id="waitlistForm">
+        <input
+          type="email"
+          id="email"
+          placeholder="Your Email Address"
+          required
+        />
+        <button type="submit">Get Notified</button>
+      </form>
+
+      <!-- Clickable Text to Show Beta Tester Form -->
+      <p class="credit">
+        <strong class="beta-text" id="betaTrigger"
+          >Beta testing opportunities available</strong
+        >
+      </p>
+
+      <!-- Hidden Beta Tester Interest Form -->
+      <form id="betaTesterForm" class="hidden transition-form">
+        <input type="text" id="firstName" placeholder="First Name" required />
+        <input type="text" id="lastName" placeholder="Last Name" required />
+        <textarea
+          id="message"
+          placeholder="Why do you want to be a beta tester? (optional)"
+          required
+        ></textarea>
+        <button type="submit">Apply for Beta Testing</button>
+      </form>
+
+      <!-- Background Change Buttons -->
+      <div class="theme-buttons">
+        <button class="theme-btn" onclick="changeBackground('bookish')">
+          📖
+        </button>
+        <button class="theme-btn" onclick="changeBackground('moon')">🌙</button>
+        <button class="theme-btn" onclick="changeBackground('cactus')">
+          🌵
+        </button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
