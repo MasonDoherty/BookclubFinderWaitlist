@@ -88,6 +88,24 @@ document.getElementById("betaTrigger").addEventListener("click", function () {
     document.getElementById("betaTesterForm").classList.toggle("hidden");
 });
 
+// Preload theme images
+const themeImages = [
+    "bookish.jpg",
+    "moon.jpg",
+    "cactus.jpg"
+];
+
+const preloadImages = () => {
+    themeImages.forEach((imageSrc) => {
+        const img = new Image();
+        img.src = imageSrc;
+    });
+};
+
+// Run preload function when the page loads
+window.addEventListener("load", preloadImages);
+
+
 // Change Background Image
 function changeBackground(theme) {
     const background = document.getElementById("background");
