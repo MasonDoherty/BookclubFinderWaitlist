@@ -1,40 +1,45 @@
 // API Endpoint
 const API_URL = "https://bookclubfinderapi.azurewebsites.net/api/waitlist/signup";
 
+// Function to show/hide loading spinner inside button
+function toggleButtonLoading(button, isLoading) {
+    if (isLoading) {
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner"></span> Sending...`;
+    } else {
+        button.disabled = false;
+        button.innerHTML = button.dataset.originalText;
+    }
+}
+
 // Handle Waitlist Signup (Email Only)
 document.getElementById("waitlistForm").addEventListener("submit", async function (event) {
     event.preventDefault();
-    const firstName = document.getElementById("firstName").value.trim();
-    const lastName = document.getElementById("lastName").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const message = document.getElementById("message").value.trim();
-
+    const email = document.getElementById("waitlistEmail").value.trim();
     if (!email) {
         alert("Please enter a valid email address.");
         return;
     }
 
-    const requestData = { email, firstName, lastName, message };
+    const button = event.target.querySelector("button");
+    button.dataset.originalText = button.innerHTML;
+    toggleButtonLoading(button, true);
 
     try {
         const response = await fetch(API_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestData)
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
         });
 
         const data = await response.json();
-        if (response.ok) {
-            alert(data.message || "You're on the waitlist! Check your email.");
-            document.getElementById("email").value = ""; // Clear input
-        } else {
-            alert(data.message || "Something went wrong. Please try again.");
-        }
+        alert(data.message || "You're on the waitlist! Check your email.");
+        document.getElementById("waitlistEmail").value = "";
     } catch (error) {
         console.error("Error:", error);
         alert("Error connecting to server. Please try again later.");
+    } finally {
+        toggleButtonLoading(button, false);
     }
 });
 
@@ -43,7 +48,7 @@ document.getElementById("betaTesterForm").addEventListener("submit", async funct
     event.preventDefault();
     const firstName = document.getElementById("firstName").value.trim();
     const lastName = document.getElementById("lastName").value.trim();
-    const email = document.getElementById("email").value.trim();
+    const email = document.getElementById("betaEmail").value.trim();
     const message = document.getElementById("message").value.trim();
 
     if (!email) {
@@ -51,42 +56,61 @@ document.getElementById("betaTesterForm").addEventListener("submit", async funct
         return;
     }
 
-    const requestData = {
-        firstName: firstName || null,
-        lastName: lastName || null,
-        email: email,
-        message: message || null
-    };
+    const button = event.target.querySelector("button");
+    button.dataset.originalText = button.innerHTML;
+    toggleButtonLoading(button, true);
 
     try {
         const response = await fetch(API_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestData)
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ firstName, lastName, email, message }),
         });
 
         const data = await response.json();
-        if (response.ok) {
-            alert(data.message || "Thank you for applying as a beta tester!");
-            document.getElementById("firstName").value = "";
-            document.getElementById("lastName").value = "";
-            document.getElementById("email").value = "";
-            document.getElementById("message").value = "";
-        } else {
-            alert(data.message || "Something went wrong. Please try again.");
-        }
+        alert(data.message || "Thank you for applying as a beta tester!");
+        document.getElementById("firstName").value = "";
+        document.getElementById("lastName").value = "";
+        document.getElementById("betaEmail").value = "";
+        document.getElementById("message").value = "";
     } catch (error) {
         console.error("Error:", error);
         alert("Error connecting to server. Please try again later.");
+    } finally {
+        toggleButtonLoading(button, false);
     }
 });
 
-// Toggle Beta Tester Form Visibility
+// Toggle Beta Tester Form Visibility and Change Text
 document.getElementById("betaTrigger").addEventListener("click", function () {
-    document.getElementById("betaTesterForm").classList.toggle("hidden");
+    const betaForm = document.getElementById("betaTesterForm");
+    const waitlistForm = document.getElementById("waitlistForm");
+    const betaTrigger = document.getElementById("betaTrigger");
+
+    if (betaForm.classList.contains("hidden")) {
+        // Show beta form, hide waitlist form
+        betaForm.classList.remove("hidden");
+        waitlistForm.classList.add("hidden");
+
+        // Transfer email if available
+        const topEmail = document.getElementById("waitlistEmail").value.trim();
+        if (topEmail) {
+            document.getElementById("betaEmail").value = topEmail;
+        }
+
+        // Change button text
+        betaTrigger.textContent = "Nevermind, just sign up for waitlist";
+    } else {
+        // Hide beta form, show waitlist form
+        betaForm.classList.add("hidden");
+        waitlistForm.classList.remove("hidden");
+
+        // Reset button text
+        betaTrigger.textContent = "Beta testing opportunities available";
+    }
 });
+
+
 
 // Preload theme images
 const themeImages = [

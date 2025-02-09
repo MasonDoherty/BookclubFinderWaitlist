@@ -173,6 +173,9 @@ button:hover {
     transform: translateY(20px);
     pointer-events: none;
 }
+/* .hidden {
+    display: none;
+} */
 
 /* Show Form - Moves Up */
 .show {
@@ -242,6 +245,31 @@ button:hover {
         width: 60px;
         height: 60px;
     }
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+        }
+    
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+    
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
 
 
 }
