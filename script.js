@@ -12,9 +12,9 @@ function toggleButtonLoading(button, isLoading) {
     }
 }
 
-// Handle Waitlist Signup (Email Only)
 document.getElementById("waitlistForm").addEventListener("submit", async function (event) {
     event.preventDefault();
+
     const email = document.getElementById("waitlistEmail").value.trim();
     if (!email) {
         alert("Please enter a valid email address.");
@@ -29,27 +29,37 @@ document.getElementById("waitlistForm").addEventListener("submit", async functio
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({
+                firstName: "",  // Empty string
+                lastName: "",   // Empty string
+                email,          // User-provided email
+                message: ""     // Empty string
+            }),
         });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to sign up.");
+        }
 
         const data = await response.json();
         alert(data.message || "You're on the waitlist! Check your email.");
         document.getElementById("waitlistEmail").value = "";
     } catch (error) {
         console.error("Error:", error);
-        alert("Error connecting to server. Please try again later.");
+        alert(error.message || "Error connecting to server. Please try again later.");
     } finally {
         toggleButtonLoading(button, false);
     }
 });
 
-// Handle Beta Tester Signup (Full Form)
 document.getElementById("betaTesterForm").addEventListener("submit", async function (event) {
     event.preventDefault();
-    const firstName = document.getElementById("firstName").value.trim();
-    const lastName = document.getElementById("lastName").value.trim();
+
+    const firstName = document.getElementById("firstName").value.trim() || "N/A";
+    const lastName = document.getElementById("lastName").value.trim() || "N/A";
     const email = document.getElementById("betaEmail").value.trim();
-    const message = document.getElementById("message").value.trim();
+    const message = document.getElementById("message").value.trim() || "N/A";
 
     if (!email) {
         alert("Please enter a valid email address.");
@@ -67,6 +77,11 @@ document.getElementById("betaTesterForm").addEventListener("submit", async funct
             body: JSON.stringify({ firstName, lastName, email, message }),
         });
 
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to sign up.");
+        }
+
         const data = await response.json();
         alert(data.message || "Thank you for applying as a beta tester!");
         document.getElementById("firstName").value = "";
@@ -75,11 +90,13 @@ document.getElementById("betaTesterForm").addEventListener("submit", async funct
         document.getElementById("message").value = "";
     } catch (error) {
         console.error("Error:", error);
-        alert("Error connecting to server. Please try again later.");
+        alert(error.message || "Error connecting to server. Please try again later.");
     } finally {
         toggleButtonLoading(button, false);
     }
 });
+
+
 
 // Toggle Beta Tester Form Visibility and Change Text
 document.getElementById("betaTrigger").addEventListener("click", function () {
